@@ -14,6 +14,8 @@ import cookieSession from 'cookie-session'
 import HTTP_STATUS from 'http-status-codes'
 import compression from 'compression'
 
+const SERVER_PORT = 5001
+
 export class ChattyServer {
   private app: Application // instance of express app
 
@@ -65,7 +67,18 @@ export class ChattyServer {
   }
   private routeMiddleware(app: Application): void {}
   private globalErrorHandler(app: Application): void {}
-  private startServer(app: Application): void {}
+  private async startServer(app: Application): Promise<void> {
+    try {
+      const httpServer: http.Server = new http.Server(app)
+      this.startHttpServer(httpServer)
+    } catch (err) {
+      console.error(err)
+    }
+  }
   private createSocketIO(httpServer: http.Server): void {}
-  private startHttpServer(httpServer: http.Server): void {}
+  private startHttpServer(httpServer: http.Server): void {
+    httpServer.listen(SERVER_PORT, () =>
+      console.log(`Server is listening on ${SERVER_PORT}`)
+    )
+  }
 }
